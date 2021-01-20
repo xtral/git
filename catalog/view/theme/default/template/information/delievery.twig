@@ -1,0 +1,162 @@
+{{ header }}
+ <style>
+   @font-face {
+    font-family: FiraSansExtraCondensed; 
+    src: url(font/FiraSansExtraCondensed.ttf); 
+   }
+   body {
+    font-family: FiraSansExtraCondensed;
+   }
+  </style>
+ <div class="container">
+
+	
+
+ 
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if success %}
+    <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="form-group" id="wow">
+		<div id="ser">
+              <label class="control-label" for="input-name">{{ entry_name }}</label>
+				<div id="rblock"><i id="ricon" class="fa fa-search"></i></div>
+              <input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control" /> </div>
+			  <p id="shipdet">Type your country to get shipping details</p>
+			 
+            </div>
+      </div>
+	  
+     
+        <form  action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-country">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  
+                  <td class="col-sm-4 top">{% if sort == 'name' %}
+                    <a  class="{{ order|lower }}">Delievery countries</a>
+                    {% else %}
+                    <a >{{ column_name }}</a>
+                    <{% endif %}</td>
+					     <td class="col-sm-2 top">{% if sort == 'fee' %}
+                    <a  class="{{ order|lower }}">Shipping fee</a>
+                    {% else %}
+                    <a >Shipping fee</a>
+                    {% endif %}</td>
+                  <td class="col-sm-2 top">{% if sort == 'iso_code_2' %}
+                    <a href="{{ sort_iso_code_2 }}" class="{{ order|lower }}">{{ column_iso_code_2 }}</a>
+                    {% else %}
+                    <a href="{{ sort_iso_code_2 }}">{{ column_iso_code_2 }}</a>
+                    {% endif %}</td>
+                  <td class="col-sm-2 top">{% if sort == 'iso_code_3' %}
+                    <a href="{{ sort_iso_code_3 }}" class="{{ order|lower }}">{{ column_iso_code_3 }}</a>
+                    {% else %}
+                    <a href="{{ sort_iso_code_3 }}">{{ column_iso_code_3 }}</a>
+                    {% endif %}</td>
+                  <td class="col-sm-2 top">{{ column_action }}</td>
+                </tr>
+              </thead>
+              <tbody>
+                {% if countries %}
+                {% for country in countries %}
+                <tr>
+                  
+                  <td class="text-left">{{ country.name }}</td>
+				    <td class="text-left">{{ country.fee }}</td>
+                  <td class="text-left"></td>
+                  <td class="text-left"></td>
+                  <td class="text-right"></td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td class="text-center" colspan="5">{{ text_no_results }}</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </form>
+  
+    </div>
+  </div>
+ <script type="text/javascript"><!--
+$('#button-filter').on('click', function() {
+	var url = '';
+
+	var filter_name = $('input[name=\'filter_name\']').val();
+
+	if (filter_name) {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
+	}
+
+
+	location = 'index.php?route=information/delievery' + url;
+});
+
+$(document).ready(function() {
+  $('input').keydown(function(e) {
+ if(e.keyCode === 13) {
+ var url = '';
+
+	var filter_name = $('input[name=\'filter_name\']').val();
+
+	if (filter_name) {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
+	}
+
+
+	location = 'index.php?route=information/delievery' + url;
+ }
+  });
+});
+
+//--></script> 
+  <script type="text/javascript"><!--
+// IE and Edge fix!
+$('button[form=\'form-product\']').on('click', function(e) {
+	$('#form-product').attr('action', $(this).attr('formaction'));
+});
+  
+$('input[name=\'filter_name\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=information/delievery/autocomplete&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['fee']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'filter_name\']').val(item['label']);
+		var url = '';
+
+	var filter_name = $('input[name=\'filter_name\']').val();
+
+	if (filter_name) {
+		url += '&filter_name=' + encodeURIComponent(filter_name);
+	}
+
+
+	location = 'index.php?route=information/delievery' + url;
+	}
+});
+
+
+//--></script></div>
+{{ footer }}
